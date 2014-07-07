@@ -18,3 +18,5 @@ doc/
 .DS_Store
 .idea
 .secret
+__pycache__
+python/__pycache__
