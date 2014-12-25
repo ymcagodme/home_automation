@@ -1,29 +1,77 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>WebIOPi | Light Control</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
         <script type="text/javascript" src="/webiopi.js"></script>
-        <script type="text/javascript">
+</head>
+<body align="center" style="width:100%">
+    <div id="debug"></div>
+
+    <script language="JavaScript">
+        function loadJpeg(){
+            document.getElementById("4f_cam").src = "http://admin:132456@huangsoon.ddns.net:8080/cgi-bin/net_jpeg.cgi?ch=10&time=" + (new Date()).getTime();
+        }
+        document.write('<img id="4f_cam" src="http://admin:132456@huangsoon.ddns.net:8080/cgi-bin/net_jpeg.cgi?ch=10&time=' + (new Date()).getTime() + '" onload="loadJpeg()" onerror="loadJpeg()"/>');
+    </script>
+
+    <div id="light_control" align="center"> </div>
+    <hr />
+    <script language="JavaScript">
+        function load1FJpeg(){
+            document.getElementById("1f_cam").src = "http://admin:132456@huangsoon.ddns.net:8080/cgi-bin/net_jpeg.cgi?ch=5&time=" + (new Date()).getTime();
+        }
+        document.write('<img id="1f_cam" src="http://admin:132456@huangsoon.ddns.net:8080/cgi-bin/net_jpeg.cgi?ch=5&time=' + (new Date()).getTime() + '" onload="load1FJpeg()" onerror="load1FJpeg()"/>');
+    </script>
+    <div id="door_control" align="center"> </div>
+    <script>
+        <!-- $(document).ready(function() { -->
+        <!--     $("#debug").html("load at the end"); -->
+        <!--     <1!-- alert("Loaded"); --1> -->
+        <!-- }); -->
         webiopi().ready(function() {
-                // Create a "Light" labeled button for GPIO 17
-                var button = webiopi().createGPIOButton(17, "Light");
+                var lightPIN = 10;
+                var powerPIN = 24;
+                var upPIN = 25;
+                var stopPIN = 8;
+                var downPIN = 7;
+
+
+                // Set GPIO in OUTPUT mode
+                webiopi().setFunction(lightPIN, "OUT");
+                webiopi().setFunction(powerPIN, "OUT");
+                webiopi().setFunction(upPIN, "OUT");
+                webiopi().setFunction(stopPIN, "OUT");
+                webiopi().setFunction(downPIN, "OUT");
+
+                var light_button = webiopi().createGPIOButton(lightPIN, "4F Light");
+                var power_button = webiopi().createSequenceButton("power_button", "Power", powerPIN, 500, "010");
+                var up_button = webiopi().createSequenceButton("up_button", "Up", upPIN, 500, "010");
+                var stop_button = webiopi().createSequenceButton("stop_button", "Stop", stopPIN, 500, "010");
+                var down_button = webiopi().createSequenceButton("down_button", "Down", downPIN, 500, "010");
 
                 // Append button to HTML element with ID="controls" using jQuery
-                $("#controls").append(button);
+                $("#light_control").append(light_button);
+                $("#door_control").append(power_button);
+                $("#door_control").append(up_button);
+                $("#door_control").append(stop_button);
+                $("#door_control").append(down_button);
+                $("#debug").html("Loaded!");
 
                 // Refresh GPIO buttons
                 // pass true to refresh repeatedly of false to refresh once
                 webiopi().refreshGPIO(true);
         });
-
-        </script>
+        
+    </script>
         <style type="text/css">
                 button {
                         display: block;
                         margin: 5px 5px 5px 5px;
-                        width: 160px;
-                        height: 45px;
+                        width: 80%;
+                        height: 50px;
                         font-size: 24pt;
                         font-weight: bold;
                         color: white;
@@ -37,8 +85,5 @@
                         background-color: Blue;
                 }
         </style>
-</head>
-<body>
-        <div id="controls" align="center"></div>
 </body>
 </html>

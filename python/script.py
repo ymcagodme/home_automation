@@ -30,3 +30,14 @@ def loop():
 
 def destroy():
     GPIO.digitalWrite(LIGHT, GPIO.LOW)
+
+@webiopi.macro
+def getLightHours():
+    return "%d;%d" % (HOUR_ON, HOUR_OFF)
+
+@webiopi.macro
+def setLightHours(on, off):
+    global HOUR_ON, HOUR_OFF
+    HOUR_ON = int(on)
+    HOUR_OFF = int(off)
+    return getLightHours()
