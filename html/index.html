@@ -124,11 +124,9 @@
                         if (value == 1) {
                             $("#gpio"+gpio).removeClass("grey");
                             $("#gpio"+gpio).addClass("green");
-                            console.log("Val = 1");
                         } else {
                             $("#gpio"+gpio).removeClass("green");
                             $("#gpio"+gpio).addClass("grey");
-                            console.log("Val = 0");
                         }
                     };
                     webiopi().refreshGPIO(true);
