@@ -4,7 +4,7 @@
         <title>Cloud Control System</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="mobile-web-app-capable" content="yes">
+        <!-- <meta name="mobile-web-app-capable" content="yes"> -->
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
         <script type="text/javascript" src="webiopi.js"></script>
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
@@ -13,7 +13,9 @@
     </head>
     <body>
         <div class="container">
-            <h2>控制中心</h2>
+            <div class="center">
+                <h2>控制中心</h2>
+            </div>
             <div class="row">
                 <div class="col s12 m12 l6">
                   <div class="card right-align">
@@ -22,7 +24,7 @@
                     </div>
                     <div class="card-image">
                       <img src="http://admin:132456@huangsoon.ddns.net:8080/cgi-bin/net_jpeg.cgi?ch=10" id="4f_cam">
-                      <span class="card-title" id="4f_osd">12/25/2014, 1:32:12 PM</span>
+                      <span class="card-title" id="4f_osd"></span>
                     </div>
                     <div class="card-action">
                         <a class="waves-effect waves-light btn-large white-text" id="gpio10">
@@ -39,14 +41,14 @@
                     </div>
                     <div class="card-image">
                       <img src="http://admin:132456@huangsoon.ddns.net:8080/cgi-bin/net_jpeg.cgi?ch=0" id="1f_cam">
-                      <span class="card-title" id="1f_osd">12/25/2014, 1:32:12 PM</span>
+                      <span class="card-title" id="1f_osd"></span>
                     </div>
                     <div class="card-action">
 
-                        <a class="waves-effect waves-light btn-floating green"><i class="mdi-action-settings-power"></i></a>
-                        <a class="waves-effect waves-light btn-floating green"><i class="mdi-hardware-keyboard-arrow-up"></i></a>
-                        <a class="waves-effect waves-light btn-floating green"><i class="mdi-av-stop"></i></a>
-                        <a class="waves-effect waves-light btn-floating green"><i class="mdi-hardware-keyboard-arrow-down"></i></a>
+                        <a class="waves-effect waves-light btn-floating grey" id="gpio24"><i class="mdi-action-settings-power"></i></a>
+                        <a class="waves-effect waves-light btn-floating grey" id="gpio25"><i class="mdi-hardware-keyboard-arrow-up"></i></a>
+                        <a class="waves-effect waves-light btn-floating grey" id="gpio8"><i class="mdi-av-stop"></i></a>
+                        <a class="waves-effect waves-light btn-floating grey" id="gpio7"><i class="mdi-hardware-keyboard-arrow-down"></i></a>
                     </div>
                   </div>
                 </div>
@@ -96,7 +98,7 @@
                         }
                     };
 
-                    $("#gpio10").on("click", function() {
+                    $("#gpio"+lightPIN).on("click", function() {
                         console.log("4F light action!");
                         // toast("[Power Switch] 4F Light", 2000);
                         toggle_with_callback(lightPIN, function() {
@@ -104,24 +106,39 @@
                             console.log("[Success] 4F light");
                         });
                     });
+                    $("#gpio"+powerPIN).on("click", function() {
+                        console.log("Power action");
+                        $("#gpio"+powerPIN).removeClass("grey");
+                        $("#gpio"+powerPIN).addClass("green");
+                        webiopi().outputSequence(powerPIN, 500, "010", function(){
+                            console.log("Power up!");
+                        });
+                    });
+                    $("#gpio"+upPIN).on("click", function() {
+                        console.log("Up action");
+                        $("#gpio"+upPIN).removeClass("grey");
+                        $("#gpio"+upPIN).addClass("green");
+                        webiopi().outputSequence(upPIN, 500, "010", function(){
+                            console.log("finsih up action!");
+                        });
+                    });
+                    $("#gpio"+stopPIN).on("click", function() {
+                        console.log("Stop action");
+                        $("#gpio"+stopPIN).removeClass("grey");
+                        $("#gpio"+stopPIN).addClass("green");
+                        webiopi().outputSequence(stopPIN, 500, "010", function(){
+                            console.log("Stop finished");
+                        });
+                    });
+                    $("#gpio"+downPIN).on("click", function() {
+                        console.log("Down action");
+                        $("#gpio"+downPIN).removeClass("grey");
+                        $("#gpio"+downPIN).addClass("green");
+                        webiopi().outputSequence(downPIN, 500, "010", function(){
+                            console.log("Finsih Down");
+                        });
+                    });
 
-                    var light_button = webiopi().createGPIOButton(lightPIN, "4F Light");
-                    var power_button = webiopi().createSequenceButton("power_button", "Power", powerPIN, 500, "010");
-                    var up_button = webiopi().createSequenceButton("up_button", "Up", upPIN, 500, "010");
-                    var stop_button = webiopi().createSequenceButton("stop_button", "Stop", stopPIN, 500, "010");
-                    var down_button = webiopi().createSequenceButton("down_button", "Down", downPIN, 500, "010");
-
-                    // Append button to HTML element with ID="controls" using jQuery
-                    // $("#light_control").append(light_button);
-                    // $("#door_control").append(power_button);
-                    // $("#door_control").append(up_button);
-                    // $("#door_control").append(stop_button);
-                    // $("#door_control").append(down_button);
-                    // $("#debug").html("Loaded!");
-
-                    // Refresh GPIO buttons
-                    // pass true to refresh repeatedly of false to refresh once
-                    // Overwrite the default update function to add class
                     webiopi().updateValue = function(gpio, value) {
                         w().GPIO[gpio].value = value;
                         if (value == 1) {
