@@ -129,7 +129,7 @@ function WebIOPi() {
 		var style = document.createElement('link');
 		style.rel = "stylesheet";
 		style.type = 'text/css';
-		style.href = '/jquery-mobile.css';
+		style.href = '/jquery.css';
 		head.appendChild(style);
 	}
 
