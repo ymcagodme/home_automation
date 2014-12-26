@@ -4,10 +4,10 @@
         <title>Cloud Control System</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        // <script type="text/javascript" src="webiopi.js"></script>
-        <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+        <script type="text/javascript" src="webiopi.js"></script>
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-        <script type="text/javascript" src="js/materialize.js"></script>
+        <script type="text/javascript" src="js/materialize.min.js"></script>
+        <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
     </head>
     <body>
         <div class="container">
@@ -96,9 +96,10 @@
 
                     $("#gpio10").on("click", function() {
                         console.log("4F light action!");
-                        toast("[Power Switch] 4F Light", 2000);
+                        // toast("[Power Switch] 4F Light", 2000);
                         toggle_with_callback(lightPIN, function() {
-                            toast("[Success] 4F Light");
+                            // toast("[Success] 4F Light");
+                            console.log("[Success] 4F light");
                         });
                     });
 
