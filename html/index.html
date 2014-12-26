@@ -4,7 +4,7 @@
         <title>Cloud Control System</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="apple-mobile-web-app-capable" content="yes">
-        <!-- <meta name="mobile-web-app-capable" content="yes"> -->
+        <meta name="mobile-web-app-capable" content="yes">
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
         <script type="text/javascript" src="webiopi.js"></script>
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
@@ -58,19 +58,32 @@
         <script>
             $(document).ready(function() {
                 console.log("jQuery is ready!");
-                $("#4f_cam").load(function() {
-                    var d = new Date();
-                    var url = 'http://admin:132456@huangsoon.ddns.net:8080/cgi-bin/net_jpeg.cgi?ch=10&time=' + d.getTime();
-                    $("#4f_cam").attr('src', url)
-                    $("#4f_osd").html(d.toLocaleString());
-                });
+                $("#4f_cam")
+                    .load(function() {
+                        var d = new Date();
+                        var url = 'http://admin:132456@huangsoon.ddns.net:8080/cgi-bin/net_jpeg.cgi?ch=10&time=' + d.getTime();
+                        $("#4f_cam").attr('src', url);
+                        $("#4f_osd").html(d.toLocaleString());})
+                    .error(function() {
+                        var d = new Date();
+                        var url = 'http://admin:132456@huangsoon.ddns.net:8080/cgi-bin/net_jpeg.cgi?ch=10&time=' + d.getTime();
+                        $("#4f_cam").attr('src', url);
+                        $("#4f_osd").html(d.toLocaleString());
+                        console.log("Faili over!");
+                    });
 
-                $("#1f_cam").load(function() {
-                    var d = new Date();
-                    var url = 'http://admin:132456@huangsoon.ddns.net:8080/cgi-bin/net_jpeg.cgi?ch=0&time=' + d.getTime();
-                    $("#1f_cam").attr('src', url)
-                    $("#1f_osd").html(d.toLocaleString());
-                });
+                $("#1f_cam")
+                    .load(function() {
+                        var d = new Date();
+                        var url = 'http://admin:132456@huangsoon.ddns.net:8080/cgi-bin/net_jpeg.cgi?ch=0&time=' + d.getTime();
+                        $("#1f_cam").attr('src', url);
+                        $("#1f_osd").html(d.toLocaleString());})
+                    .error(function() {
+                        var d = new Date();
+                        var url = 'http://admin:132456@huangsoon.ddns.net:8080/cgi-bin/net_jpeg.cgi?ch=0&time=' + d.getTime();
+                        $("#1f_cam").attr('src', url);
+                        $("#1f_osd").html(d.toLocaleString());
+                    });
             });
 
 
