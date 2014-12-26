@@ -90,7 +90,7 @@ function WebIOPi() {
 
 	var jquery = document.createElement('script');
 	jquery.type = 'text/javascript';
-	jquery.src = 'https://code.jquery.com/jquery-2.1.1.min.js';
+	jquery.src = '/jquery.js';
 	if (!isMobile()) {
 		jquery.onload = function() {
 			w().init();
@@ -102,7 +102,7 @@ function WebIOPi() {
 		console.log("load jquery mobile");
 		var mobile = document.createElement('script');
 		mobile.type = 'text/javascript';
-		mobile.src = 'http://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.3/jquery.mobile.min.js';
+		mobile.src = '/jquery-mobile.js';
 		mobile.onload = function() {
 			w().initMobile()
 		};
