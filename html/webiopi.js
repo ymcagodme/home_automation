@@ -21,7 +21,7 @@ function w() {
 	if (_webiopi == undefined) {
 		_webiopi = new WebIOPi();
 	}
-	
+
 	return _webiopi;
 }
 
@@ -38,7 +38,7 @@ var _isMobile = undefined;
 function isMobile() {
 	if (_isMobile == undefined) {
 		_isMobile = ((navigator.userAgent != undefined && isMobileUserAgent(navigator.userAgent))
-				|| (navigator.vendor != undefined && isMobileUserAgent(navigator.vendor)) 
+				|| (navigator.vendor != undefined && isMobileUserAgent(navigator.vendor))
 				|| (window.opera != undefined && isMobileUserAgent(window.opera)))
 	}
 	return _isMobile
@@ -57,14 +57,14 @@ function WebIOPi() {
 			V50: {value: 3, style: "V50", label: "5.0V"},
 			GPIO: {value: 4, style: "GPIO", label: "GPIO"}
 	};
-	
+
 	this.ALT = {
 			I2C: {name: "I2C", enabled: false, gpios: []},
 			SPI: {name: "SPI", enabled: false, gpios: []},
 			UART: {name: "UART", enabled: false, gpios: []},
 			ONEWIRE: {name: "ONEWIRE", enabled: false, gpios: []}
 		};
-		
+
 	// init GPIOs
 	for (var i=0; i<this.GPIO.length; i++) {
 		var gpio = Object();
@@ -82,7 +82,7 @@ function WebIOPi() {
 		if (res && (res.length > 1)) {
 			script = scripts[i];
 			this.context = res[1];
-			
+
 		}
 	}
 
@@ -112,13 +112,13 @@ function WebIOPi() {
 	// GA
 	_gaq.push(['_setAccount', 'UA-33979593-2']);
 	_gaq.push(['_trackPageview']);
-		
+
 	var ga = document.createElement('script');
 	ga.type = 'text/javascript';
 	ga.async = false;
 	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
 	head.appendChild(ga);
-	
+
 	var style = document.createElement('link');
 	style.rel = "stylesheet";
 	style.type = 'text/css';
@@ -132,7 +132,7 @@ function WebIOPi() {
 		style.href = '/jquery-mobile.css';
 		head.appendChild(style);
 	}
-	
+
 	// init ALTs
 	this.addALT(this.ALT.I2C, 0, "SDA");
 	this.addALT(this.ALT.I2C, 1, "SCL");
@@ -144,10 +144,10 @@ function WebIOPi() {
 	this.addALT(this.ALT.SPI,  9, "MISO");
 	this.addALT(this.ALT.SPI, 10, "MOSI");
 	this.addALT(this.ALT.SPI, 11, "SCLK");
-	
+
 	this.addALT(this.ALT.UART, 14, "TX");
 	this.addALT(this.ALT.UART, 15, "RX");
-	
+
 	this.addALT(this.ALT.ONEWIRE, 4, "");
 }
 
@@ -157,7 +157,7 @@ WebIOPi.prototype.init = function() {
 		for (i = 0; i<count-1; i++) {
 			var type = w().TYPE.GPIO;
 			var label = data[i];
-			
+
 			if (label == "DNC") {
 				type = w().TYPE.DNC;
 			}
@@ -170,11 +170,11 @@ WebIOPi.prototype.init = function() {
 			else if (label == "V50") {
 				type = w().TYPE.V50;
 			}
-			
+
 			if (type.value != w().TYPE.GPIO.value) {
 				label = type.label;
 			}
-			
+
 			w().map(i+1, type, label);
 		}
 		if (w().readyCallback != null) {
@@ -197,7 +197,7 @@ WebIOPi.prototype.map = function (pin, type, value) {
 	w().PINS[pin] = Object();
 	w().PINS[pin].type = type
 	w().PINS[pin].value = value;
-	
+
 	if (type.value == w().TYPE.GPIO.value) {
 		w().GPIO[value].mapped = true;
 	}
@@ -246,11 +246,11 @@ WebIOPi.prototype.updateALT = function (alt, enable) {
 
 WebIOPi.prototype.refreshGPIO = function (repeat) {
 	$.getJSON(w().context + "*", function(data) {
-		w().updateALT(w().ALT.I2C, data["I2C"]);
-		w().updateALT(w().ALT.SPI, data["SPI"]);
-		w().updateALT(w().ALT.UART, data["UART"]);
-		w().updateALT(w().ALT.ONEWIRE, data["ONEWIRE"]);
-		
+		// w().updateALT(w().ALT.I2C, data["I2C"]);
+		// w().updateALT(w().ALT.SPI, data["SPI"]);
+		// w().updateALT(w().ALT.UART, data["UART"]);
+		// w().updateALT(w().ALT.ONEWIRE, data["ONEWIRE"]);
+
 		$.each(data["GPIO"], function(gpio, data) {
 	    	w().updateFunction(gpio, data["function"]);
 	    	if ( ((gpio != 4) && ((data["function"] == "IN") || (data["function"] == "OUT"))
@@ -261,7 +261,7 @@ WebIOPi.prototype.refreshGPIO = function (repeat) {
 	    		w().updateSlider(gpio, "ratio", data["ratio"]);
 	    		w().updateSlider(gpio, "angle", data["angle"]);
 	    	}
-	    	
+
 		});
 	});
 	if (repeat === true) {
@@ -272,7 +272,7 @@ WebIOPi.prototype.refreshGPIO = function (repeat) {
 
 WebIOPi.prototype.checkVersion = function () {
 	var version;
-	
+
 	$.get(w().context + "version", function(data) {
 		_gaq.push(['_trackEvent', 'version', data]);
 //		version = data.split("/")[2];
@@ -525,7 +525,7 @@ RPiHeader.prototype.getPinCell = function (pin) {
 RPiHeader.prototype.getDescriptionCell = function (pin, align) {
 	var cell = $('<td>');
 	cell.attr("align", align);
-	
+
 	var div = $('<div>');
 	div.attr("class", "Description");
 	if (w().PINS[pin].type.value != w().TYPE.GPIO.value) {
@@ -535,7 +535,7 @@ RPiHeader.prototype.getDescriptionCell = function (pin, align) {
 		div.attr("id", "description"+w().PINS[pin].value);
 		div.append("GPIO " + w().PINS[pin].value);
 	}
-	
+
 	cell.append(div);
 
 	return cell;
@@ -566,11 +566,11 @@ RPiHeader.prototype.createTable = function (containerId) {
 
 		table.append(line);
 	}
-	
+
 	if (containerId != undefined) {
 		$("#"+containerId).append(table);
 	}
-	
+
 	return table;
 }
 
@@ -582,7 +582,7 @@ WebIOPi.prototype.Expert = function () {
 }
 
 function Expert() {
-	
+
 }
 
 Expert.prototype.createGPIO = function (gpio) {
@@ -601,20 +601,20 @@ Expert.prototype.createGPIO = function (gpio) {
 
 Expert.prototype.createList = function (containerId) {
 	var box = $('<div>');
-	
+
 	for (i = 0; i<w().GPIO.length; i++) {
 		if (w().GPIO[i].mapped == true) {
 			var gpio = w().Expert().createGPIO(i);
 			box.append(gpio);
 		}
 	}
-		
+
 	if (containerId != undefined) {
 		$("#"+containerId).append(box);
 	}
-	
+
 	return box;
-} 
+}
 
 WebIOPi.prototype.Serial = function(device) {
 	return new Serial(device);
@@ -627,7 +627,7 @@ function Serial(device) {
 
 Serial.prototype.write = function(data) {
 	$.post(this.url, data);
-} 
+}
 
 Serial.prototype.read = function(callback) {
 	$.get(this.url, callback);
@@ -637,7 +637,7 @@ WebIOPi.prototype.newDevice = function(type, name) {
 	if (type == "ADC") {
 		return new ADC(name);
 	}
-	
+
 	if (type == "DAC") {
 		return new DAC(name);
 	}
@@ -728,7 +728,7 @@ GPIOPort.prototype.refreshUI = function() {
 		element.header = $("<h3>" + this + "</h3>");
 		element.append(element.header);
 	}
-	
+
 	if ((element != undefined) && (element.table == undefined) && this.isReady()) {
 		element.header.text(this)
 		element.table = $("<table>");
@@ -741,7 +741,7 @@ GPIOPort.prototype.refreshUI = function() {
 			line.append(cell);
 		}
 		element.table.append(line);
-		
+
 		line = $("<tr>");
 		for (var i = this.channelCount-1; i>=0; i--) {
 			var cell = $("<td>");
@@ -767,7 +767,7 @@ GPIOPort.prototype.refreshUI = function() {
 			line.append(cell);
 		}
 		element.table.append(line);
-		
+
 		line = $("<tr>");
 		for (var i = this.channelCount-1; i>=0; i--) {
 			var cell = $("<td>");
@@ -791,7 +791,7 @@ GPIOPort.prototype.refreshUI = function() {
 		}
 		element.table.append(line);
 	}
-	
+
 	this.readAll(function(name, data) {
 		for (i in data) {
 			$("#" + name + "_" + i + "_value").attr("class", data[i]["value"] == "1" ? "HIGH" : "LOW");
@@ -808,7 +808,7 @@ function ADC(name) {
 	this.maxInteger = 0;
 	this.resolution = 0;
 	this.refreshTime = 1000;
-	
+
 	var adc = this;
 	$.get(this.url + "/count", function(data) {
 		adc.channelCount = parseInt(data);
@@ -878,12 +878,12 @@ ADC.prototype.readAllVolt = function(callback) {
 ADC.prototype.refreshUI = function () {
 	var adc = this;
 	var element = this.element;
-	
+
 	if ((element != undefined) && (element.header == undefined)) {
 		element.header = $("<h3>" + this + "</h3>");
 		element.append(element.header);
 	}
-	
+
 	if ((element != undefined) && (element.channels == undefined) && this.isReady()) {
 		element.header.text(this);
 		element.channels = Array();
@@ -892,7 +892,7 @@ ADC.prototype.refreshUI = function () {
 			div.text("Channel-" + i);
 			element.append(div);
 			element.channels[i] = div;
-			
+
 		}
 	}
 	this.readAllVolt(function(name, data) {
@@ -913,7 +913,7 @@ function DAC(name) {
 	this.channelCount = 0;
 	this.maxInteger = 0;
 	this.resolution = 0;
-	
+
 	var dac = this;
 	$.get(this.url + "/count", function(data) {
 		dac.channelCount = parseInt(data);
@@ -974,7 +974,7 @@ DAC.prototype.refreshUI = function() {
 		element.header = $("<h3>" + this + "</h3>");
 		element.append(element.header);
 	}
-	
+
 	if ((element != undefined) && (element.table == undefined) && this.isReady()) {
 		element.header.text(this);
 		element.table = $("<table>");
@@ -985,7 +985,7 @@ DAC.prototype.refreshUI = function() {
 			cell = $("<td>");
 			cell.text("Channel-" + i);
 			line.append(cell);
-			
+
 			cell = $("<td>");
 			var slider = $('<input type="range" min="0" max="100" step="1" value="0">')
 			slider.attr("channel", i);
@@ -1032,7 +1032,7 @@ function PWM(name) {
 	this.maxInteger = 0;
 	this.resolution = 0;
 	this.refreshTime = 1000;
-	
+
 	var pwm = this;
 	$.get(this.url + "/count", function(data) {
 		pwm.channelCount = parseInt(data);
@@ -1106,7 +1106,7 @@ PWM.prototype.refreshUI = function() {
 		element.header = $("<h3>" + this + "</h3>");
 		element.append(element.header);
 	}
-	
+
 	if ((element != undefined) && (element.table == undefined) && this.isReady()) {
 		element.header.text(this);
 		element.table = $("<table>");
@@ -1118,18 +1118,18 @@ PWM.prototype.refreshUI = function() {
 			cell = $("<td>");
 			cell.text("Channel-" + i);
 			line.append(cell);
-			
+
 			cell = $("<td>");
 			var checkbox = $('<input type="checkbox">');
 			checkbox.attr("id", "checkbox_" + this.name + "_" + i);
 			checkbox.attr("channel", i);
-			
+
 			var cblabel = $('<label>');
 			cblabel.append(checkbox);
 			cblabel.append("Servo");
 			cell.append(cblabel);
 			line.append(cell);
-			
+
 			cell = $("<td>");
 			var slider = $('<input type="range" min="0" max="100" step="1" value="0">')
 			slider.attr("channel", i);
@@ -1188,7 +1188,7 @@ PWM.prototype.refreshUI = function() {
 				span.text(val + "%");
 			}
 			slider.val(val);
-			
+
 		}
 		setTimeout(function(){pwm.refreshUI()}, pwm.refreshTime);
 	});
@@ -1229,7 +1229,7 @@ Temperature.prototype.refreshUI = function() {
 		element.header = $("<h3>" + this + "</h3>");
 		element.append(element.header);
 	}
-	
+
 	this.getCelsius(function(name, data){
 		if (element != undefined) {
 			element.header.text(temp + ": " + data + "°C");
@@ -1267,7 +1267,7 @@ Pressure.prototype.refreshUI = function() {
 		element.header = $("<h3>" + this + "</h3>");
 		element.append(element.header);
 	}
-	
+
 	pressure.getHectoPascal(function(name, data){
 		if (element != undefined) {
 			element.header.text(pressure + ": " + data + "hPa");
@@ -1275,7 +1275,7 @@ Pressure.prototype.refreshUI = function() {
 		setTimeout(function(){pressure.refreshUI()}, pressure.refreshTime);
 	});
 }
-	
+
 
 function Luminosity(name) {
 	this.name = name;
@@ -1296,12 +1296,12 @@ Luminosity.prototype.getLux = function(callback) {
 Luminosity.prototype.refreshUI = function() {
 	var lum = this;
 	var element = this.element;
-	
+
 	if ((element != undefined) && (element.header == undefined)) {
 		element.header = $("<h3>" + this + "</h3>");
 		element.append(element.header);
 	}
-	
+
 	this.getLux(function(name, data){
 		if (element != undefined) {
 			element.header.text(lum + ": " + data + "lx");
@@ -1329,12 +1329,12 @@ Distance.prototype.getMillimeter = function(callback) {
 Distance.prototype.refreshUI = function() {
 	var dist = this;
 	var element = this.element;
-	
+
 	if ((element != undefined) && (element.header == undefined)) {
 		element.header = $("<h3>" + this + "</h3>");
 		element.append(element.header);
 	}
-	
+
 	this.getMillimeter(function(name, data){
 		if (element != undefined) {
 			element.header.text(dist + ": " + data + "mm");
